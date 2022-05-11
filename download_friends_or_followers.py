@@ -67,6 +67,14 @@ class Bot(object):
         filepath = handle + '_followers.csv'
         ids = self.get_follower_ids(handle)
         self.download(ids, filepath)
+    
+    def download_followers_ids(self, handle):
+        '''Downloads followers ids of passed handle.'''
+        filepath = handle + '_followers_ids.csv'
+        ids = self.get_follower_ids(handle)
+        df = pd.DataFrame(ids)
+        df.columns = ['id']
+        df.to_csv(filepath, index=False)
         
     def download(self, ids, filepath):
         '''Downloads passed users.'''
@@ -82,6 +90,8 @@ class Bot(object):
             self.download_friends(handle)
         elif which == 'followers':
             self.download_followers(handle)
+        elif which == 'followers_ids':
+            self.download_followers_ids(handle)
         elif which == 'both':
             self.download_friends(handle)
             self.download_followers(handle)
@@ -90,7 +100,7 @@ class Bot(object):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--user', help='Twitter handle for which to download followers and/or friends.', required=True)
-    parser.add_argument('-t', '--type', help='Accepts three options: followers, friends, both. Defaults to followers only.', default='followers')
+    parser.add_argument('-t', '--type', help='Accepts three options: followers, friends, followers_ids. Defaults to followers_ids only.', default='followers_ids')
     args = parser.parse_args()
 
     # Run the bot
